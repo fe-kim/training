@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+import subprocess
+import sys
+
+EXEC_SUCCESS = 0
+EXEC_FAIL = 1
+
+
+def get_branch_name():
+    return (
+        subprocess.check_output(["/usr/bin/git", "symbolic-ref", "HEAD"])
+        .decode()
+        .split("/")[2]
+        .strip()
+        .upper()
+    )
+
+
+def prepend_commit_msg(text):
+    msgfile = sys.argv[1]
+
+    with open(msgfile) as f:
+        contents = f.read()
+
+    with open(msgfile, "w") as f:
+        # Don't append if it's already there
+        if not contents.startswith(text):
+            f.write(text)
+        f.write(contents)
+
+
+def main():
+    ret = EXEC_SUCCESS
+
+    try:
+        branch = get_branch_name()
+        header = "{}-\n".format(branch)
+        prepend_commit_msg(header)
+    except Exception as e:
+        print(e)
+        ret = EXEC_FAIL
+
+    return ret
+
+
+if __name__ == "__main__":
+    sys.exit(main())

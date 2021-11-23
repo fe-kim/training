@@ -1,0 +1,44 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+    -   id: trailing-whitespace
+        stages: [commit]
+    -   id: end-of-file-fixer
+        stages: [commit]
+    -   id: check-yaml
+        stages: [commit]
+    -   id: check-added-large-files
+        stages: [commit]
+-   repo: https://github.com/ambv/black
+    rev: 21.6b0
+    hooks:
+    -   id: black
+        stages: [commit]
+-   repo: https://github.com/pycqa/isort
+    rev: 5.9.2
+    hooks:
+    -   id: isort
+        stages: [commit]
+-   repo: https://github.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+    -   id: flake8
+        stages: [commit]
+-   repo: local
+    hooks:
+    -   id: unit test
+        name: unit test
+        entry: python -m pytest tests
+        language: system
+        exclude: doc/|sctipts/|tool/|test/
+        types: [python]
+        pass_filenames: false
+        stages: [commit]
+-   repo: local
+    hooks:
+    -   id: prepare-commit-msg
+        name: prepare commit msg
+        entry: ./.githooks/prepare-commit-msg
+        language: system
+        stages: [prepare-commit-msg]
